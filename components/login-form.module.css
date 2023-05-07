@@ -1,4 +1,6 @@
 .login_box {
     width: 340px;
     background-color: #fff;
+    border-radius: 15px;
+    border: 1px solid #ddd;
 }

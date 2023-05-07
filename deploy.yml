@@ -1,0 +1,73 @@
+Skip to content
+Search or jump to…
+Pull requests
+Issues
+Codespaces
+Marketplace
+Explore
+ 
+@chae-useb 
+useb-inc
+/
+api-manager-frontend
+Private
+Cannot fork because forking is disabled.
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+Deploy to Server
+fix: deploy #5
+Jobs
+Run details
+Workflow file for this run
+.github/workflows/deploy.yml at 1838d8f
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install and Build
+        uses: actions/setup-node@v1
+      - run: npm install --force
+      - run: npx nx build api-manager
+      - run: npx nx run export
+
+      - name: Deploy to Staging server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: '-avz -i --delete'
+          SOURCE: ''
+          REMOTE_HOST: ${{ secrets.SSH_HOST }}
+          REMOTE_USER: 'hjlee'
+          TARGET: '/home/hjlee/frontend'
+          FOLDER: dist/apps/api-manager/exported
+          EXCLUDE: '/.git/, /*.pem/'
+          SCRIPT_BEFORE: |
+            whoami
+            ls -al
+          SCRIPT_AFTER: |
+            whoami
+            ls -al ./frontend
+            echo $RSYNC_STDOUT
+            date > ./frontend/RELEASE
+            ./release.sh

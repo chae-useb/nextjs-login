@@ -1,4 +1,4 @@
-import { Formik, Field, Form } from 'formik';
+import { Formik, Field, Form, FormikHelpers } from 'formik';
 import styles from './login-form.module.css';
 
 interface Values {
@@ -8,7 +8,7 @@ interface Values {
 
 export default function LoginForm() {
     return (
-      <div className={styles.login_box + ' p-3'}>
+      <div className={styles.login_box + ' p-4'}>
         <h1 className="display-6 mb-3">Login</h1>
         <Formik
           initialValues={{
@@ -23,7 +23,7 @@ export default function LoginForm() {
             setTimeout(() => {
               alert(JSON.stringify(values, null, 2));
               setSubmitting(false);
-            }, 500);
+            }, 100);
           }}
 
         >
